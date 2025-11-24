@@ -1,0 +1,85 @@
+pluginManagement {
+    repositories {
+        maven {
+            url = 'https://gitea.woggioni.net/api/packages/woggioni/maven'
+            content {
+                includeGroup 'net.woggioni.gradle'
+                includeGroup 'net.woggioni.gradle.lombok'
+            }
+        }
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        catalog {
+            version('spring-boot', '3.5.8')
+            version('spring-session', '3.5.3')
+            version('spring-security', '6.5.7')
+            version('liquibase', '5.0.1')
+            version('h2', '2.4.240')
+            version('hibernate', '7.1.8.Final')
+            version('jakarta-servlet-api', '6.0.0')
+            version('swagger2', '3.0.0')
+            version('springdoc-openapi', '2.0.2')
+            version('junit.jupiter', '6.0.1')
+            version('lombok', '1.18.42')
+            version('my-gradle-plugins', '2025.11.19')
+            version('postgresql', '42.7.8')
+            version('opentelemetry', '2.22.0')
+
+            plugin('lombok', 'net.woggioni.gradle.lombok').versionRef('my-gradle-plugins')
+
+            library('lombok', 'org.projectlombok', 'lombok').versionRef('lombok')
+            library('hibernate-jpamodelgen', 'org.hibernate', 'hibernate-jpamodelgen').versionRef('hibernate')
+            library('spring-boot-starter', 'org.springframework.boot', 'spring-boot-starter').versionRef('spring-boot')
+            library('spring-boot-starter-web', 'org.springframework.boot', 'spring-boot-starter-web').versionRef('spring-boot')
+            library('spring-boot-starter-data-jpa', 'org.springframework.boot', 'spring-boot-starter-data-jpa').versionRef('spring-boot')
+            library('spring-boot-starter-security', 'org.springframework.boot', 'spring-boot-starter-security').versionRef('spring-boot')
+            library('spring-boot-starter-data-redis', 'org.springframework.boot', 'spring-boot-starter-data-redis').versionRef('spring-boot')
+            library('spring-boot-starter-log4j2', 'org.springframework.boot', 'spring-boot-starter-log4j2').versionRef('spring-boot')
+            library('spring-boot-starter-webflux', 'org.springframework.boot', 'spring-boot-starter-webflux').versionRef('spring-boot')
+            library('spring-boot-starter-undertow', 'org.springframework.boot', 'spring-boot-starter-undertow').versionRef('spring-boot')
+            library('spring-boot-starter-test', 'org.springframework.boot', 'spring-boot-starter-test').versionRef('spring-boot')
+            library('spring-boot-starter-actuator', 'org.springframework.boot', 'spring-boot-starter-actuator').versionRef('spring-boot')
+            library('spring-boot-starter-cache', 'org.springframework.boot', 'spring-boot-starter-cache').versionRef('spring-boot')
+            library('spring-session-data-redis', 'org.springframework.session', 'spring-session-data-redis').versionRef('spring-session')
+            library('spring-security-test', 'org.springframework.security', 'spring-security-test').versionRef('spring-security')
+            library('liquibase-core', 'org.liquibase', 'liquibase-core').versionRef('liquibase')
+            library('jakarta-servlet-api', 'jakarta.servlet', 'jakarta.servlet-api').versionRef('jakarta-servlet-api')
+            library('swagger2', 'io.springfox', 'springfox-swagger2').versionRef('swagger2')
+            library('springdoc-openapi-starter-webmvc-ui',
+                    'org.springdoc',
+                    'springdoc-openapi-starter-webmvc-ui'
+            ).versionRef('springdoc-openapi')
+            library('opentelemetry.javaagent', 'io.opentelemetry.javaagent', 'opentelemetry-javaagent').versionRef('opentelemetry')
+
+
+            library('h2', 'com.h2database', 'h2').versionRef('h2')
+            library('postgresql', 'org.postgresql', 'postgresql').versionRef('postgresql')
+
+            [
+                'junit-jupiter-api', 'junit-jupiter-params', 'junit-jupiter-engine'
+            ].each {
+                library(it, 'org.junit.jupiter', it).versionRef('junit-jupiter')
+            }
+
+            [
+                    'junit-platform-launcher',
+                    'junit-platform-engine',
+                    'junit-platform-runner',
+                    'junit-platform-suite',
+                    'junit-platform-console-standalone',
+                    'junit-platform-console',
+                    'junit-platform-reporting',
+                    'junit-platform-jfr'
+            ].each {
+                library(it, 'org.junit.platform', it).versionRef('junit-jupiter')
+            }
+
+        }
+    }
+}
+
+rootProject.name = 'xtrade'

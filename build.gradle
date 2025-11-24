@@ -1,0 +1,101 @@
+plugins {
+    id 'java-library'
+    alias catalog.plugins.lombok apply false
+    id 'application'
+    id 'jacoco'
+}
+
+allprojects {
+    apply plugin: catalog.plugins.lombok.get().pluginId
+
+    repositories {
+        mavenCentral()
+    }
+
+    lombok {
+        version = catalog.versions.lombok.get()
+    }
+
+    java {
+        modularity.inferModulePath = false
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
+    }
+
+    tasks.named(JavaPlugin.COMPILE_JAVA_TASK_NAME, JavaCompile) {
+        options.compilerArgs << '-parameters'
+    }
+
+    dependencies {
+        testImplementation catalog.junit.jupiter.api
+        testImplementation catalog.junit.jupiter.params
+        testRuntimeOnly catalog.junit.jupiter.engine
+        testRuntimeOnly catalog.junit.platform.launcher
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+
+configurations {
+    implementation {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+}
+
+dependencies {
+    implementation catalog.spring.boot.starter.web
+    implementation catalog.spring.boot.starter.data.jpa
+    implementation catalog.spring.boot.starter.data.redis
+    implementation catalog.spring.boot.starter.log4j2
+    implementation catalog.spring.boot.starter.security
+    implementation catalog.spring.boot.starter.undertow
+    implementation catalog.spring.boot.starter.cache
+    implementation catalog.spring.boot.starter.actuator
+    implementation catalog.spring.session.data.redis
+    implementation catalog.liquibase.core
+    implementation catalog.springdoc.openapi.starter.webmvc.ui
+
+    runtimeOnly catalog.jakarta.servlet.api
+
+    annotationProcessor catalog.hibernate.jpamodelgen
+    runtimeOnly catalog.postgresql
+    runtimeOnly catalog.opentelemetry.javaagent
+
+    testImplementation catalog.spring.boot.starter.test
+    testImplementation catalog.spring.security.test
+}
+
+
+
+application {
+    mainClass = 'com.xtrade.order.book.OrderBookApplication'
+}
+
+
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+}
+
+
+
+tasks.register("run-swagger", JavaExec) {
+    group = 'application'
+    description = 'Run the application with the SwaggerUI enabled'
+    sourceSets.main.output.classesDirs
+    Provider<Jar> jarTaskProvider = tasks.named(JavaPlugin.JAR_TASK_NAME, Jar)
+
+    classpath(configurations.runtimeClasspath)
+    classpath(jarTaskProvider)
+    mainClass = project.extensions.getByType(JavaApplication.class).mainClass
+    systemProperty("springdoc.swagger-ui.enabled", "true")
+}

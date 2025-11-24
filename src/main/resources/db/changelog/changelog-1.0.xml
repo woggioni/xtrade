@@ -1,0 +1,99 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="xtrade" id="1">
+        <createSequence sequenceName="hibernate_sequence"/>
+        <createSequence sequenceName="ob_order_seq" incrementBy="50"/>
+        <createSequence sequenceName="order_book_seq" incrementBy="50"/>
+        <createSequence sequenceName="execution_seq" incrementBy="50"/>
+    </changeSet>
+    <changeSet author="xtrade" id="3">
+        <createTable tableName="instrument">
+            <column name="id" type="VARCHAR">
+                <constraints primaryKey="true" primaryKeyName="instrument_pk"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="xtrade" id="4">
+        <createTable tableName="order_book">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="ob_order_book_pk"/>
+            </column>
+            <column name="status" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="instrument_id" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_name" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="order_book"
+                baseColumnNames="instrument_id"
+                constraintName="order_book_instrument_fk"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="NO ACTION"
+                onUpdate="NO ACTION"
+                referencedTableName="instrument"
+                referencedColumnNames="id"
+                validate="true"/>
+    </changeSet>
+    <changeSet author="xtrade" id="5">
+        <createTable tableName="ob_order">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="ob_order_pk"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)"/>
+            <column name="quantity" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_book_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="ob_order"
+            baseColumnNames="order_book_id"
+            constraintName="ob_order_order_book_fk"
+            deferrable="false"
+            initiallyDeferred="false"
+            onDelete="NO ACTION"
+            onUpdate="NO ACTION"
+            referencedTableName="order_book"
+            referencedColumnNames="id"
+            validate="true"/>
+    </changeSet>
+    <changeSet author="xtrade" id="6">
+        <createTable tableName="execution">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="execution_pk"/>
+            </column>
+            <column name="filled_quantity" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="execution"
+                baseColumnNames="order_id"
+                constraintName="execution_ob_order_fk"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="NO ACTION"
+                onUpdate="NO ACTION"
+                referencedTableName="ob_order"
+                referencedColumnNames="id"
+                validate="true"/>
+    </changeSet>
+</databaseChangeLog>
