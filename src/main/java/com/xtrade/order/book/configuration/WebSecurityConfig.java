@@ -40,21 +40,21 @@ public class WebSecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        final var users = Stream.of(
-            "user",
-            "user2",
-            "user3"
-        ).map(name -> {
-            return User.builder().passwordEncoder(passwordEncoder::encode)
-                .username(name)
-                .password("password")
-                .roles("USER")
-                .build();
-        }).toArray(UserDetails[]::new);
-        return new InMemoryUserDetailsManager(users);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+//        final var users = Stream.of(
+//            "user",
+//            "user2",
+//            "user3"
+//        ).map(name -> {
+//            return User.builder().passwordEncoder(passwordEncoder::encode)
+//                .username(name)
+//                .password("password")
+//                .roles("USER")
+//                .build();
+//        }).toArray(UserDetails[]::new);
+//        return new InMemoryUserDetailsManager(users);
+//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {

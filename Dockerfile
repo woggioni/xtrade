@@ -19,6 +19,7 @@ RUN --mount=type=cache,ro,from=build,source=/home/luser/xtrade/build,target=/bui
 ADD conf/application.properties .
 ADD --chown=xtrade:xtrade https://repo1.maven.org/maven2/io/opentelemetry/javaagent/opentelemetry-javaagent/2.22.0/opentelemetry-javaagent-2.22.0.jar opentelemetry-javaagent.jar
 ENV JAVA_OPTS=-javaagent:opentelemetry-javaagent.jar
+ENV SPRING_CONFIG_LOCATION=application.properties
 ENTRYPOINT "./bin/xtrade"
 HEALTHCHECK CMD curl 'http://localhost:8080/actuator/health' -X GET -H 'Accept: application/json'
 EXPOSE 8080

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class StartupListener implements ApplicationListener<ContextRefreshedEvent> {
 
     private final InstrumentService is;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         is.loadValues();

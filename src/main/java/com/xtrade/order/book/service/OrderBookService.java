@@ -4,6 +4,7 @@ import com.xtrade.order.book.exception.OrderBookNotFoundException;
 import com.xtrade.order.book.model.Instrument;
 import com.xtrade.order.book.model.OrderBook;
 import com.xtrade.order.book.model.OrderBook_;
+import com.xtrade.order.book.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -26,7 +27,7 @@ public class OrderBookService {
     public OrderBook createOrderBook(Instrument instrument) {
         final var orderBook = new OrderBook();
         final var sctx = schs.getContext();
-        orderBook.setUser(sctx.getAuthentication().getName());
+        orderBook.setUser((User) sctx.getAuthentication().getPrincipal());
         orderBook.setInstrument(instrument);
         orderBook.setStatus(OrderBook.Status.Open);
         em.persist(orderBook);
@@ -35,7 +36,7 @@ public class OrderBookService {
 
     public Optional<OrderBook> findOrderBook(Instrument instrument) {
         final var sctx = schs.getContext();
-        final var user = sctx.getAuthentication().getName();
+        final var user = sctx.getAuthentication().getPrincipal();
         final var cb = em.getCriteriaBuilder();
         final var query = cb.createQuery(OrderBook.class);
         final var orderBookEntity = query.from(OrderBook.class);

@@ -1,55 +1,53 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-
-    <changeSet author="xtrade" id="1">
-        <createSequence sequenceName="hibernate_sequence"/>
-        <createSequence sequenceName="ob_order_seq" incrementBy="50"/>
-        <createSequence sequenceName="order_book_seq" incrementBy="50"/>
-        <createSequence sequenceName="execution_seq" incrementBy="50"/>
-    </changeSet>
-    <changeSet author="xtrade" id="3">
-        <createTable tableName="instrument">
-            <column name="id" type="VARCHAR">
-                <constraints primaryKey="true" primaryKeyName="instrument_pk"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="xtrade" id="4">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="liquibase (generated)" id="1764063434017-1">
         <createTable tableName="order_book">
             <column name="id" type="BIGINT">
-                <constraints primaryKey="true" primaryKeyName="ob_order_book_pk"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="order_book_pkey"/>
             </column>
-            <column name="status" type="TINYINT">
+            <column name="status" type="SMALLINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="instrument_id" type="VARCHAR">
+            <column name="instrument_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_name" type="VARCHAR">
+            <column name="user_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint
-                baseTableName="order_book"
-                baseColumnNames="instrument_id"
-                constraintName="order_book_instrument_fk"
-                deferrable="false"
-                initiallyDeferred="false"
-                onDelete="NO ACTION"
-                onUpdate="NO ACTION"
-                referencedTableName="instrument"
-                referencedColumnNames="id"
-                validate="true"/>
     </changeSet>
-    <changeSet author="xtrade" id="5">
+    <changeSet author="liquibase (generated)" id="1764063434017-2">
+        <createTable tableName="execution">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="execution_pkey"/>
+            </column>
+            <column name="filled_quantity" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="numeric(38, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-3">
+        <createTable tableName="instrument">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="instrument_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-4">
         <createTable tableName="ob_order">
             <column name="id" type="BIGINT">
-                <constraints primaryKey="true" primaryKeyName="ob_order_pk"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ob_order_pkey"/>
             </column>
-            <column name="price" type="DECIMAL(10,2)"/>
+            <column name="price" type="numeric(38, 2)"/>
             <column name="quantity" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
@@ -57,43 +55,105 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint
-            baseTableName="ob_order"
-            baseColumnNames="order_book_id"
-            constraintName="ob_order_order_book_fk"
-            deferrable="false"
-            initiallyDeferred="false"
-            onDelete="NO ACTION"
-            onUpdate="NO ACTION"
-            referencedTableName="order_book"
-            referencedColumnNames="id"
-            validate="true"/>
     </changeSet>
-    <changeSet author="xtrade" id="6">
-        <createTable tableName="execution">
-            <column name="id" type="BIGINT">
-                <constraints primaryKey="true" primaryKeyName="execution_pk"/>
-            </column>
-            <column name="filled_quantity" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="price" type="DECIMAL(10,2)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="order_id" type="BIGINT">
-                <constraints nullable="false"/>
+    <changeSet author="liquibase (generated)" id="1764063434017-5">
+        <createTable tableName="role">
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="role_pkey"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint
-                baseTableName="execution"
-                baseColumnNames="order_id"
-                constraintName="execution_ob_order_fk"
-                deferrable="false"
-                initiallyDeferred="false"
-                onDelete="NO ACTION"
-                onUpdate="NO ACTION"
-                referencedTableName="ob_order"
-                referencedColumnNames="id"
-                validate="true"/>
+        <insert tableName="role">
+            <column name="name">USER</column>
+        </insert>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-6">
+        <createTable tableName="user">
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_pkey"/>
+            </column>
+            <column name="password" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="user">
+            <column name="name">user</column>
+            <column name="password">$2a$10$clQkqvZUBaTZdKFe9ABUCeFNA5PFvF8aqpu.Qe97Y7Nqtj4HQnZ4W</column>
+        </insert>
+        <insert tableName="user">
+            <column name="name">user2</column>
+            <column name="password">$2a$10$MuVN2sBV5xMxF2f1rHqmZuJfxl6r7qP2D19a/Mp2TeiRBCsqrdPAq</column>
+        </insert>
+        <insert tableName="user">
+            <column name="name">user3</column>
+            <column name="password">$2a$10$4S7th8RaXLCYB.xjSnTUWuLqa.9p3ZZDdGuOLpwEtD5J/vr684cEe</column>
+        </insert>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-7">
+        <createTable tableName="user_roles">
+            <column name="user_name" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_roles_pkey"/>
+            </column>
+            <column name="roles_name" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_roles_pkey"/>
+            </column>
+        </createTable>
+        <insert tableName="user_roles">
+            <column name="user_name">user</column>
+            <column name="roles_name">USER</column>
+        </insert>
+        <insert tableName="user_roles">
+            <column name="user_name">user2</column>
+            <column name="roles_name">USER</column>
+        </insert>
+        <insert tableName="user_roles">
+            <column name="user_name">user3</column>
+            <column name="roles_name">USER</column>
+        </insert>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-8">
+        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807"
+                        minValue="1" sequenceName="execution_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-9">
+        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807"
+                        minValue="1" sequenceName="ob_order_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-10">
+        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807"
+                        minValue="1" sequenceName="order_book_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-11">
+        <addForeignKeyConstraint baseColumnNames="instrument_id" baseTableName="order_book"
+                                 constraintName="fk1ikk8a499a8dgttwq9oxlyn9m" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="instrument" validate="true"/>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-12">
+        <addForeignKeyConstraint baseColumnNames="order_book_id" baseTableName="ob_order"
+                                 constraintName="fkanlsqd60bv6ky3w2av7gph9f" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="order_book" validate="true"/>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-13">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="execution"
+                                 constraintName="fkbqlmiocmwrac139b7v7721q31" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="ob_order" validate="true"/>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-14">
+        <addForeignKeyConstraint baseColumnNames="roles_name" baseTableName="user_roles"
+                                 constraintName="fkl3g20ocgwyws6lyerivjvgfag" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="name" referencedTableName="role" validate="true"/>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-15">
+        <addForeignKeyConstraint baseColumnNames="user_name" baseTableName="order_book"
+                                 constraintName="fks1gggtkm1omrjc1r642s8vb9q" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="name" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="liquibase (generated)" id="1764063434017-16">
+        <addForeignKeyConstraint baseColumnNames="user_name" baseTableName="user_roles"
+                                 constraintName="fksy93shydwovei6w95l13nc8ev" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="name" referencedTableName="user" validate="true"/>
     </changeSet>
 </databaseChangeLog>

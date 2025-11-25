@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Table(indexes = {
-    @Index(columnList = "user_name, instrument_id", unique = true)
+    @Index(columnList = "\"user\", instrument_id", unique = true)
 })
 @Entity
 @Data
@@ -20,8 +20,8 @@ public class OrderBook {
     @GeneratedValue
     private long id;
 
-    @Column(name = "user_name", nullable = false)
-    private String user;
+    @ManyToOne(optional = false)
+    private User user;
 
     @ManyToOne(optional = false)
     private Instrument instrument;
