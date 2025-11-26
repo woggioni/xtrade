@@ -1,5 +1,6 @@
 package com.xtrade.order.book.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +21,7 @@ public class OrderBook {
     @GeneratedValue
     private long id;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     private User user;
 

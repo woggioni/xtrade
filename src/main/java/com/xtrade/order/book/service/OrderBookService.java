@@ -20,14 +20,14 @@ public class OrderBookService {
 
     @PersistenceContext
     private final EntityManager em;
-
     private final SecurityContextHolderStrategy schs;
 
     @Transactional
     public OrderBook createOrderBook(Instrument instrument) {
         final var orderBook = new OrderBook();
         final var sctx = schs.getContext();
-        orderBook.setUser((User) sctx.getAuthentication().getPrincipal());
+        final var user = em.find(User.class, sctx.getAuthentication().getName());
+        orderBook.setUser(user);
         orderBook.setInstrument(instrument);
         orderBook.setStatus(OrderBook.Status.Open);
         em.persist(orderBook);
@@ -36,12 +36,12 @@ public class OrderBookService {
 
     public Optional<OrderBook> findOrderBook(Instrument instrument) {
         final var sctx = schs.getContext();
-        final var user = sctx.getAuthentication().getPrincipal();
+        final var username = em.find(User.class, sctx.getAuthentication().getName());
         final var cb = em.getCriteriaBuilder();
         final var query = cb.createQuery(OrderBook.class);
         final var orderBookEntity = query.from(OrderBook.class);
         final var predicate = cb.and(
-            cb.equal(orderBookEntity.get(OrderBook_.user), user),
+            cb.equal(orderBookEntity.get(OrderBook_.user), username),
             cb.equal(orderBookEntity.get(OrderBook_.instrument), instrument)
         );
         query.select(orderBookEntity).where(predicate);

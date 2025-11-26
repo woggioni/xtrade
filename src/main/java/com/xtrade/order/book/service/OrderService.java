@@ -19,13 +19,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+
     @PersistenceContext
     private final EntityManager em;
 
     private final OrderBookService orderBookService;
-    private final InstrumentService instrumentService;
     private final SecurityContextHolderStrategy schs;
-
 
     @Transactional
     public Order createOrder(long quantity, BigDecimal price, Instrument instrument) {
