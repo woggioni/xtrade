@@ -14,14 +14,12 @@ services:
   xtrade:
     build:
       context: .
+      target: release-xtrade
     restart: unless-stopped
     environment:
-#      - OTEL_SERVICE_NAME=xtrade
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://apm:8200
       - OTEL_EXPORTER_OTLP_TRACES_INSECURE=True
-#       - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://apm:8200
       - OTEL_EXPORTER_OTLP_METRICS_INSECURE=True
-#       - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://apm:8200
       - OTEL_TRACES_EXPORTER=otlp
       - OTEL_METRICS_EXPORTER=otlp
       - OTEL_LOGS_EXPORTER=otlp
@@ -42,6 +40,50 @@ services:
         limits:
           cpus: "1.00"
           memory: 768m
+  xcache:
+    build:
+      context: .
+      target: release-xcache
+    restart: unless-stopped
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://apm:8200
+      - OTEL_EXPORTER_OTLP_TRACES_INSECURE=True
+      - OTEL_EXPORTER_OTLP_METRICS_INSECURE=True
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_METRICS_EXPORTER=otlp
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=xcache,service.version=0.0.1,deployment.environment=production
+#      - OTEL_TRACES_SAMPLER=parentbased_traceidratio
+#      - OTEL_TRACES_SAMPLER_ARG=0.01
+    ports:
+      - "127.0.0.1:8180:8080"
+      - "[::1]:8180:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      apm:
+        condition: service_started
+    deploy:
+      resources:
+        limits:
+          cpus: "4.00"
+          memory: 2G
+  rbcs-client:
+    build:
+      context: deploy/rbcs
+    profiles:
+      - benchmark
+    depends_on:
+      xcache:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "2.00"
+          memory: 512m
   apm:
     image: docker.elastic.co/apm/apm-server:${STACK_VERSION}
     restart: unless-stopped
@@ -55,8 +97,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1.00"
-          memory: 128m
+          cpus: "0.5"
+          memory: 512m
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -83,7 +125,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1.00"
+          cpus: "0.5"
           memory: 2G
 #    ulimits:
 #      memlock:
@@ -112,7 +154,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1.00"
+          cpus: "0.5"
           memory: 1G
     healthcheck:
       test:
@@ -135,8 +177,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1.00"
-          memory: 128m
+          cpus: "4.00"
+          memory: 1024m
   postgres:
     image: postgres:${POSTGRES_VERSION}-alpine
     restart: unless-stopped

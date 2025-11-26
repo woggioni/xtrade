@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_ERR">
+            <PatternLayout pattern="%d{HH:mm:ss,SSS} [%highlight{%p}] (%t) %c: %m%n%throwable{short}"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="ALL">
+            <AppenderRef ref="Console" level="${sys:logLevel:-info}" />
+        </Root>
+    </Loggers>
+</Configuration>

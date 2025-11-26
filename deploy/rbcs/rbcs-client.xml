@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rbcs-client:profiles xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+                      xmlns:rbcs-client="urn:net.woggioni.rbcs.client"
+                      xs:schemaLocation="urn:net.woggioni.rbcs.client jpms://net.woggioni.rbcs.client/net/woggioni/rbcs/client/schema/rbcs-client.xsd"
+>
+    <profile name="xcache" base-url="http://xcache:8080/" max-connections="4" enable-compression="false">
+        <no-auth/>
+        <connection
+                idle-timeout="PT5S"
+                read-idle-timeout="PT10S"
+                write-idle-timeout="PT10S"
+                request-pipelining="true"/>
+        <!--retry-policy max-attempts="10" initial-delay="PT1S" exp="1.2"/-->
+    </profile>
+</rbcs-client:profiles>

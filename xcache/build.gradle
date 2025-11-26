@@ -1,0 +1,28 @@
+plugins {
+    id 'java-library'
+    alias catalog.plugins.lombok apply false
+    id 'application'
+}
+
+configurations {
+    implementation {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+}
+
+dependencies {
+    implementation catalog.spring.boot.starter.web
+    implementation catalog.spring.boot.starter.data.redis
+    implementation catalog.spring.boot.starter.log4j2
+    implementation catalog.spring.boot.starter.undertow
+    implementation catalog.spring.boot.starter.actuator
+
+    runtimeOnly catalog.jakarta.servlet.api
+}
+
+
+
+application {
+    mainClass = 'com.xcache.XCacheApplication'
+}

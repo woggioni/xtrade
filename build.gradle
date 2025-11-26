@@ -64,7 +64,6 @@ dependencies {
 
     annotationProcessor catalog.hibernate.jpamodelgen
     runtimeOnly catalog.postgresql
-    runtimeOnly catalog.opentelemetry.javaagent
 
     testImplementation catalog.spring.boot.starter.test
     testImplementation catalog.spring.security.test

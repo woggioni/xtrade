@@ -23,10 +23,18 @@ the `orderId` can be retrieved from the `/api/order` endpoint with the `GET` met
 ```
 
 # Run
-Run `docker compose up -d --build`
+
+```bash
+docker compose up -d --build
+```
 
 Then navigate to the [Swagger UI](http://localhost:8080/swagger-ui/index.html) and login first 
 with credentials username='user' password='password'
 
 A [Kibana web UI](http://localhost:5601/app/observability/overview) is available to view exported
 Opentelemetry data.
+
+# Benchmark
+```bash
+docker compose --profile benchmark up -d rbcs-client
+```

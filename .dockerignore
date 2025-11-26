@@ -10,3 +10,5 @@ build
 deploy
 LICENSE
 README.md
+xcache/build
+xcache/conf
